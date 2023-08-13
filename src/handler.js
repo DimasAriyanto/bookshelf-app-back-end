@@ -3,21 +3,21 @@ const books = require('./books');
 
 const addBookHandler = (request, h) => {
   const {
-    name, year, author, summary, publisher, pageCount, readPage, reading
+    name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
-  
+
   if (!name) {
     const response = h.response({
-      status: "fail",
-      message: "Gagal menambahkan buku. Mohon isi nama buku"
+      status: 'fail',
+      message: 'Gagal menambahkan buku. Mohon isi nama buku',
     }).code(400);
     return response;
-  } 
+  }
 
   if (pageCount < readPage) {
     const response = h.response({
-      status: "fail",
-      message: "Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount"
+      status: 'fail',
+      message: 'Gagal menambahkan buku. readPage tidak boleh lebih besar dari pageCount',
     }).code(400);
     return response;
   }
@@ -69,15 +69,15 @@ const getAllBooksHandler = (request, h) => {
 
   if (!name && !reading && !finished) {
     const response = h.response({
-        status: 'success',
-        data: {
-          books: books.map((book) => ({
-            id: book.id,
-            name: book.name,
-            publisher: book.publisher
-          })),
-        },
-      }).code(200);
+      status: 'success',
+      data: {
+        books: books.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    }).code(200);
     return response;
   }
 
@@ -88,17 +88,16 @@ const getAllBooksHandler = (request, h) => {
     });
 
     const response = h.response({
-        status: 'success',
-        data: {
-          books: filteredBooksName.map((book) => ({
-            id: book.id,
-            name: book.name,
-            publisher: book.publisher,
-          })),
-        },
-      }).code(200);
+      status: 'success',
+      data: {
+        books: filteredBooksName.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    }).code(200);
     return response;
-
   }
 
   if (reading) {
@@ -106,15 +105,15 @@ const getAllBooksHandler = (request, h) => {
       (book) => Number(book.reading) === Number(reading),
     );
     const response = h.response({
-        status: 'success',
-        data: {
-          books: filteredBooksReading.map((book) => ({
-            id: book.id,
-            name: book.name,
-            publisher: book.publisher,
-          })),
-        },
-      }).code(200);
+      status: 'success',
+      data: {
+        books: filteredBooksReading.map((book) => ({
+          id: book.id,
+          name: book.name,
+          publisher: book.publisher,
+        })),
+      },
+    }).code(200);
     return response;
   }
 
@@ -141,8 +140,8 @@ const getBookByIdHandler = (request, h) => {
   const book = books.filter((n) => n.id === bookId)[0];
   if (book === undefined) {
     const response = h.response({
-      status: "fail",
-      message: "Buku tidak ditemukan"
+      status: 'fail',
+      message: 'Buku tidak ditemukan',
     });
     response.code(404);
     return response;
@@ -151,7 +150,7 @@ const getBookByIdHandler = (request, h) => {
   const response = h.response({
     status: 'success',
     data: {
-      book: book,
+      book,
     },
   });
   response.code(200);
@@ -162,9 +161,9 @@ const editBookByHandler = (request, h) => {
   const { bookId } = request.params;
 
   const {
-    name, year, author, summary, publisher, pageCount, readPage, reading
+    name, year, author, summary, publisher, pageCount, readPage, reading,
   } = request.payload;
-  
+
   if (!name) {
     const response = h.response({
       status: 'fail',
@@ -172,7 +171,7 @@ const editBookByHandler = (request, h) => {
     });
     response.code(400);
     return response;
-  } 
+  }
 
   if (pageCount < readPage) {
     const response = h.response({
@@ -182,7 +181,7 @@ const editBookByHandler = (request, h) => {
     response.code(400);
     return response;
   }
-  
+
   const index = books.findIndex((book) => book.id === bookId);
 
   if (index !== -1) {
@@ -217,7 +216,7 @@ const editBookByHandler = (request, h) => {
 const deleteBookByHandler = (request, h) => {
   const { bookId } = request.params;
 
-  const index = books.findIndex((book) => book.id === bookId );
+  const index = books.findIndex((book) => book.id === bookId);
 
   if (index !== -1) {
     books.splice(index, 1);
@@ -238,4 +237,6 @@ const deleteBookByHandler = (request, h) => {
   return response;
 };
 
-module.exports = { addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByHandler, deleteBookByHandler };
+module.exports = {
+  addBookHandler, getAllBooksHandler, getBookByIdHandler, editBookByHandler, deleteBookByHandler,
+};
